@@ -10,9 +10,7 @@ function Footer() {
         darkMode ? "bg-dark text-light" : "bg-light text-dark"
       }`}
     >
-      <p className="mb-0">
-        &copy; 2025 TravelMate. Wszystkie prawa zastrzeżone.
-      </p>
+      <p className="mb-0">&copy; 2025 BarMate. Wszystkie prawa zastrzeżone.</p>
     </footer>
   );
 }
