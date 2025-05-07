@@ -1,58 +1,71 @@
+// src/pages/HomePage.js
 import React, { useState } from "react";
-import { Button, Container, Row, Col, Card } from "react-bootstrap";
-import { useNavigate } from "react-router-dom";
+import { Button, Row, Col, Card } from "react-bootstrap";
 import MainLayout from "../layouts/MainLayout";
-import AuthForm from "../components/AuthForm";
 import ModalWrapper from "../components/ModalWrapper";
+import AuthForm from "../components/AuthForm";
 
 const HomePage = () => {
-  const [isLogin, setIsLogin] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
 
-  const navigate = useNavigate();
-
-  const handleLoginClick = () => {
+  const handleStartClick = () => {
+    setIsLogin(true); // domyślnie logowanie
     setShowModal(true);
   };
 
-  const handleSwitchMode = () => {
-    setIsLogin((prevState) => !prevState);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
-
   return (
-    <MainLayout onLoginClick={handleLoginClick}>
-      <Container className="text-center my-5">
+    <MainLayout onLoginClick={handleStartClick}>
+      <section className="text-center mb-5">
+        <h1 className="display-4">Wzbogać Swój Domowy Bar</h1>
+        <p className="lead">
+          Zarządzaj zapasami, przepisami i analizuj użycie swoich składników.
+        </p>
+        <Button variant="primary" size="lg" onClick={handleStartClick}>
+          Zacznij
+        </Button>
+      </section>
+
+      <section>
+        <h2 className="mb-4 text-center">Dlaczego BarMate?</h2>
         <Row>
-          <Col md={6} className="mx-auto">
-            <Card className="shadow-lg">
+          <Col md={4}>
+            <Card className="mb-4 shadow-sm">
               <Card.Body>
-                <h2>Witaj w BarMate!</h2>
-                <p>
-                  Zorganizuj swój domowy bar, zarządzaj zapasami, przepisami i
-                  listą zakupów.
-                </p>
-                <Button variant="primary" onClick={handleLoginClick}>
-                  {localStorage.getItem("isLoggedIn") === "true"
-                    ? "Zalogowany"
-                    : "Zaloguj się"}
-                </Button>
+                <Card.Title>Zarządzanie składnikami</Card.Title>
+                <Card.Text>Śledź zapasy, dodawaj i usuwaj składniki.</Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={4}>
+            <Card className="mb-4 shadow-sm">
+              <Card.Body>
+                <Card.Title>Propozycje przepisów</Card.Title>
+                <Card.Text>
+                  Otrzymuj sugestie na podstawie posiadanych składników.
+                </Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={4}>
+            <Card className="mb-4 shadow-sm">
+              <Card.Body>
+                <Card.Title>Analiza użycia</Card.Title>
+                <Card.Text>
+                  Śledź, jak często używasz składników i jakie drinki robisz.
+                </Card.Text>
               </Card.Body>
             </Card>
           </Col>
         </Row>
-      </Container>
+      </section>
 
-      {/* Login/Registration Modal */}
       <ModalWrapper
         show={showModal}
-        onClose={handleCloseModal}
-        title={isLogin ? "Zaloguj się" : "Zarejestruj się"}
+        onClose={() => setShowModal(false)}
+        title={isLogin ? "Logowanie" : "Rejestracja"}
       >
-        <AuthForm isLogin={isLogin} onSwitchMode={handleSwitchMode} />
+        <AuthForm isLogin={isLogin} onSwitchMode={() => setIsLogin(!isLogin)} />
       </ModalWrapper>
     </MainLayout>
   );

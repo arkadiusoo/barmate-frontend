@@ -1,9 +1,10 @@
+// src/components/MainLayout.js
 import React from "react";
 import { Container } from "react-bootstrap";
 import NavigationBar from "../components/Navbar";
 import Footer from "../components/Footer";
 
-function MainLayout({ children, onLoginClick }) {
+const MainLayout = ({ children, onLoginClick }) => {
   return (
     <>
       <NavigationBar onLoginClick={onLoginClick} />
@@ -11,6 +12,6 @@ function MainLayout({ children, onLoginClick }) {
       <Footer />
     </>
   );
-}
+};
 
 export default MainLayout;

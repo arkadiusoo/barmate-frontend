@@ -36,3 +36,56 @@
     transform: rotate(360deg);
   }
 }
+
+body {
+  background-color: #f5f1e8;
+  color: #5c3d1f;
+}
+
+.App-header {
+  background-color: #a57c4f;
+  color: #fff;
+}
+
+.App-link {
+  color: #d8a35b;
+}
+
+.navbar {
+  background-color: #a57c4f;
+}
+
+.navbar-brand {
+  color: #fff !important;
+}
+
+.navbar-nav .nav-link {
+  color: #fff !important;
+}
+
+.navbar-toggler-icon {
+  background-color: #fff;
+}
+
+button {
+  background-color: #d8a35b;
+  color: #fff;
+  border: none;
+}
+
+button:hover {
+  background-color: #b97c40;
+}
+
+.card {
+  background-color: #fff;
+  border: 1px solid #d8a35b;
+}
+
+.card-title {
+  color: #5c3d1f;
+}
+
+.card-text {
+  color: #6c4b2f;
+}

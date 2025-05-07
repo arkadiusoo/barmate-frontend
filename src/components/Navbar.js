@@ -1,55 +1,44 @@
+// src/components/Navbar.js
 import React from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import ThemeToggle from "./ThemeToggle";
-import logo from "../assets/logo.png";
-import { handleLogout } from "../utils/logout";
+import logo from "../assets/logo.png"; // Jeśli masz logo, użyj je
 
 function NavigationBar({ onLoginClick }) {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg">
+    <Navbar expand="lg" className="navbar">
+      {" "}
+      {/* Używamy klasy navbar */}
       <Container>
-        <Navbar.Brand
-          href="\dashboard"
-          className="d-flex align-items-center gap-2"
-        >
+        <Navbar.Brand href="/dashboard" className="navbar-brand">
           <img
             src={logo}
             alt="Logo"
             height="30"
             style={{ objectFit: "contain" }}
           />
-          TravelMate
+          BarMate
         </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse>
-          <Nav className="ms-auto d-flex align-items-center gap-2">
-            <Nav.Link href="#" className="text-light">
+          <Nav className="ms-auto">
+            <Nav.Link href="/" className="nav-link">
               Start
             </Nav.Link>
-            <Nav.Link href="#" className="text-light">
+            <Nav.Link href="/about" className="nav-link">
               O nas
             </Nav.Link>
-
             {isLoggedIn ? (
-              <Nav.Link
-                as="button"
-                onClick={handleLogout}
-                className="text-light"
-              >
+              <Nav.Link onClick={onLoginClick} className="nav-link">
                 Wyloguj
               </Nav.Link>
             ) : (
-              <Nav.Link
-                as="button"
-                onClick={onLoginClick}
-                className="text-light"
-              >
-                Logowanie
+              <Nav.Link onClick={onLoginClick} className="nav-link">
+                Zaloguj
               </Nav.Link>
             )}
-
             <ThemeToggle />
           </Nav>
         </Navbar.Collapse>

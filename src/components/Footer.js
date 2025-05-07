@@ -1,3 +1,4 @@
+// src/components/Footer.js
 import React, { useContext } from "react";
 import { ThemeContext } from "../styles/ThemeContext";
 
