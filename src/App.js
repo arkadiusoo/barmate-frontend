@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
+import IngredientsPage from "./pages/IngredientsPage";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -31,6 +32,7 @@ function App() {
         ) : (
           <>
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/ingredients" element={<IngredientsPage />} />
             <Route path="*" element={<Navigate to="/dashboard" />} />
           </>
         )}
