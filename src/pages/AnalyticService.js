@@ -16,7 +16,14 @@ const AnalyticsPage = () => {
   const [history, setHistory] = useState([]);
 
   const handleGenerate = () => {
-    const now = new Date().toLocaleString();
+    if (!selectedChart) return;
+    const now = new Date().toLocaleString(undefined, {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
     setGenerationDate(now);
     setHistory((prev) => [...prev, { type: selectedChart, date: now }]);
   };
@@ -61,12 +68,15 @@ const AnalyticsPage = () => {
               )}
 
               <div className="border rounded p-3 bg-light text-center">
-                <p className="text-muted">[Chart image placeholder]</p>
-                <img
-                  src="/path-to-generated-chart.png"
-                  alt="Generated chart"
-                  style={{ maxWidth: "100%", borderRadius: "8px" }}
-                />
+                {selectedChart && generationDate ? (
+                  <img
+                    src="/path-to-generated-chart.png"
+                    alt="Generated chart"
+                    style={{ maxWidth: "100%", borderRadius: "8px" }}
+                  />
+                ) : (
+                  <p className="text-muted">[Chart image placeholder]</p>
+                )}
               </div>
             </Card>
           </Col>
@@ -80,7 +90,14 @@ const AnalyticsPage = () => {
               ) : (
                 <ListGroup>
                   {history.map((item, index) => (
-                    <ListGroup.Item key={index}>
+                    <ListGroup.Item
+                      key={index}
+                      onClick={() => {
+                        setSelectedChart(item.type);
+                        setGenerationDate(item.date);
+                      }}
+                      style={{ cursor: "pointer" }}
+                    >
                       <strong>{item.type}</strong>
                       <br />
                       <small className="text-muted">{item.date}</small>
