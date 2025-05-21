@@ -88,7 +88,14 @@ function Dashboard({ onLogout }) {
             <Card className="shadow-sm">
               <Card.Body>
                 <Card.Title>📅 Planowanie Zakupów</Card.Title>
-                <Card.Text>Funkcja planowania zakupów – wkrótce!</Card.Text>
+                <Card.Text>Funkcja planowania zakupów</Card.Text>
+                <Button
+                  variant="info"
+                  className="w-100"
+                  onClick={() => navigate("/shopping-list")}
+                >
+                  Zaplanuj zakupy
+                </Button>
               </Card.Body>
             </Card>
           </Col>

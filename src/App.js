@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
+import ShoppingListPage from "./pages/ShoppingListPage";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -32,6 +33,7 @@ function App() {
           <>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="*" element={<Navigate to="/dashboard" />} />
+            <Route path="/shopping-list" element={<ShoppingListPage />} />
           </>
         )}
       </Routes>
