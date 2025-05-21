@@ -14,6 +14,7 @@ const AnalyticsPage = () => {
   const [selectedChart, setSelectedChart] = useState("");
   const [generationDate, setGenerationDate] = useState(null);
   const [history, setHistory] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(null);
 
   const handleGenerate = () => {
     if (!selectedChart) return;
@@ -26,6 +27,7 @@ const AnalyticsPage = () => {
     });
     setGenerationDate(now);
     setHistory((prev) => [...prev, { type: selectedChart, date: now }]);
+    setActiveIndex(history.length);
   };
 
   return (
@@ -92,9 +94,11 @@ const AnalyticsPage = () => {
                   {history.map((item, index) => (
                     <ListGroup.Item
                       key={index}
+                      active={activeIndex === index}
                       onClick={() => {
                         setSelectedChart(item.type);
                         setGenerationDate(item.date);
+                        setActiveIndex(index);
                       }}
                       style={{ cursor: "pointer" }}
                     >
