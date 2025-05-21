@@ -47,9 +47,9 @@ const AnalyticsPage = () => {
                   <option value="preparedDrinks">
                     Number of prepared drinks
                   </option>
-                  <option value="topRecipes">Top 1 most popular drinks</option>
-                  <option value="topRecipes">Top 2 most popular drinks</option>
-                  <option value="topRecipes">Top 3 most popular drinks</option>
+                  <option value="topRecipes1">Top 1 most popular drinks</option>
+                  <option value="topRecipes2">Top 2 most popular drinks</option>
+                  <option value="topRecipes3">Top 3 most popular drinks</option>
                 </Form.Select>
               </Form.Group>
 
