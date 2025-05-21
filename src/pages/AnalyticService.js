@@ -90,24 +90,26 @@ const AnalyticsPage = () => {
               {history.length === 0 ? (
                 <p className="text-muted">Nie wygenerowano jeszcze wykresów.</p>
               ) : (
-                <ListGroup>
-                  {history.map((item, index) => (
-                    <ListGroup.Item
-                      key={index}
-                      active={activeIndex === index}
-                      onClick={() => {
-                        setSelectedChart(item.type);
-                        setGenerationDate(item.date);
-                        setActiveIndex(index);
-                      }}
-                      style={{ cursor: "pointer" }}
-                    >
-                      <strong>{item.type}</strong>
-                      <br />
-                      <small className="text-muted">{item.date}</small>
-                    </ListGroup.Item>
-                  ))}
-                </ListGroup>
+                <div style={{ maxHeight: "50vh", overflowY: "auto" }}>
+                  <ListGroup>
+                    {history.map((item, index) => (
+                      <ListGroup.Item
+                        key={index}
+                        active={activeIndex === index}
+                        onClick={() => {
+                          setSelectedChart(item.type);
+                          setGenerationDate(item.date);
+                          setActiveIndex(index);
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <strong>{item.type}</strong>
+                        <br />
+                        <small className="text-muted">{item.date}</small>
+                      </ListGroup.Item>
+                    ))}
+                  </ListGroup>
+                </div>
               )}
             </Card>
           </Col>
