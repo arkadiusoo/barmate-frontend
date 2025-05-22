@@ -17,7 +17,7 @@ export default function ShoppingListApp() {
   }, []);
 
   const fetchLists = async () => {
-    // Brak endpointu na listowanie wszystkich list – trzeba dodać w backendzie
+    
   };
 
   const createList = async () => {

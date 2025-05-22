@@ -8,14 +8,41 @@ const API_URL = "http://localhost:8080/shopping-list";
 export default function ShoppingListPage() {
   const [lists, setLists] = useState([]);
   const [newListName, setNewListName] = useState("");
-  const [newItemName, setNewItemName] = useState("");
-  const [selectedListId, setSelectedListId] = useState(null);
+  const [expandedLists, setExpandedLists] = useState({});
+  const [itemInputs, setItemInputs] = useState({});
+  const updateItemInput = (listId, field, value) => {
+    setItemInputs((prev) => ({
+        ...prev,
+        [listId]: {
+        ...prev[listId],
+        [field]: value,
+        },
+    }));
+    };
 
-  const fetchLists = async () => {
-    const userId = 1;
-    const res = await axios.get(`${API_URL}/${userId}`);
+const fetchLists = async () => {
+  const userId = 1;
+  try {
+    const res = await axios.get(`${API_URL}/user/${userId}`);
+    console.log(res.data);
     setLists(res.data);
-  };
+  } catch (error) {
+    if (error.response) {
+      if (error.response.status === 404) {
+        console.warn("Lista zakupów nie została znaleziona.");
+        // Możesz pokazać komunikat w UI, np:
+        // setErrorMessage("Nie znaleziono listy zakupów.");
+      } else {
+        console.error(`Błąd: ${error.response.status}`, error.response.data);
+      }
+    } else if (error.request) {
+      console.error("Brak odpowiedzi od serwera", error.request);
+    } else {
+      console.error("Błąd w ustawieniu zapytania", error.message);
+    }
+  }
+};
+
 
   useEffect(() => {
     fetchLists();
@@ -24,9 +51,9 @@ export default function ShoppingListPage() {
   const createList = async () => {
     if (!newListName) return;
     await axios.post(API_URL, 1, {
-    headers: {
-        "Content-Type": "application/json"
-    }
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
     setNewListName("");
     fetchLists();
@@ -37,20 +64,54 @@ export default function ShoppingListPage() {
     fetchLists();
   };
 
-  const addItem = async () => {
-  if (!newItemName || !selectedListId) return;
-
-  const shoppingItem = {
-    name: newItemName,
-    shoppingListId: selectedListId,
-    amount: 1
+  const toggleExpandList = (listId) => {
+    setExpandedLists((prev) => ({
+      ...prev,
+      [listId]: !prev[listId],
+    }));
   };
 
-  await axios.post(`${API_URL}/${selectedListId}/items`, shoppingItem);
+  const addItem = async (listId) => {
+    const input = itemInputs[listId];
+    console.log(input);
+    if (!input?.itemName || !input?.itemAmount) return;
+    const currentList = lists.find((list) => list.id === listId);
+    const shoppingItem = {
+        ingredientName: input.itemName,
+        amount: input.itemAmount,
+        unit: "szt.",
+        checked: false,
+        //userId: 1,
+        shoppingListId: currentList.id,
+    };
+     lists.map((list) => {
+    console.log("Id listy: " , list.id === listId);})
+    
+    await axios.post(`${API_URL}/${listId}/items`, shoppingItem);
+    const updatedLists = lists.map((list) => {
+        if (list.id === listId) {
+        return {
+            ...list,
+            items: [...(list.items || []), shoppingItem],
+        };
+        }
+        return list;
+    });
+    /*
+    await axios.put(`${API_URL}/${listId}`, {
+        userId: 1,
+        items: updatedLists
+    });*/
+    
+    fetchLists();
 
-  setNewItemName("");
-  fetchLists();
-};
+    // Wyczyść tylko dane dla tej listy
+    setItemInputs((prev) => ({
+        ...prev,
+        [listId]: { itemName: "", itemAmount: "" },
+    }));
+    };
+
 
   const deleteItem = async (listId, itemId) => {
     await axios.delete(`${API_URL}/${listId}/items/${itemId}`);
@@ -74,62 +135,73 @@ export default function ShoppingListPage() {
         </Col>
       </Row>
 
-      {lists.map((list) => (
-        <Card key={list.id} className="mb-3">
-          <Card.Header className="d-flex justify-content-between align-items-center">
-            <span>{list.name || `Lista #${list.id}`}</span>
-            <Button variant="danger" size="sm" onClick={() => deleteList(list.id)}>
-              🗑 Usuń listę
-            </Button>
-          </Card.Header>
-          <Card.Body>
-            <ListGroup>
-              {list.items?.map((item) => (
-                <ListGroup.Item key={item.id} className="d-flex justify-content-between">
-                  {item.name}
-                  <Button
-                    variant="outline-danger"
-                    size="sm"
-                    onClick={() => deleteItem(list.id, item.id)}
-                  >
-                    ✖
-                  </Button>
-                </ListGroup.Item>
-              ))}
-            </ListGroup>
-            
-            <Row className="mt-3">
-              <Col>
-                <Form.Control
-                  type="text"
-                  placeholder="Nazwa produktu"
-                  value={newItemName}
-                  onChange={(e) => setNewItemName(e.target.value)}
-                />
-              </Col>
-              <Col>
-                {/*
-                <Button
-                  variant="success"
-                  onClick={() => {
-                    setSelectedListId(list.id);
-                    addItem();
-                  }}
-                >
-                  ➕ Dodaj produkt
-                </Button>
-              */}
-              </Col>
-            </Row>
-            
-          </Card.Body>
-        </Card>
-      ))}
+      {lists.map((list) => {
+
+
+        return (
+          <Card key={list.id} className="mb-3">
+            <Card.Header className="d-flex justify-content-between align-items-center">
+              <span onClick={() => toggleExpandList(list.id)} style={{ cursor: "pointer" }}>
+                {expandedLists[list.id] ? "🔽" : "▶️"} {list.name || `Lista #${list.id}`}
+              </span>
+              <Button variant="danger" size="sm" onClick={() => deleteList(list.id)}>
+                🗑 Usuń listę
+              </Button>
+            </Card.Header>
+            {expandedLists[list.id] && (
+              <Card.Body>
+                <ListGroup>
+                  {list.items?.map((item) => (
+                    <ListGroup.Item
+                      key={item.id}
+                      className="d-flex justify-content-between align-items-center"
+                    >
+                      <div>
+                        {item.ingredientName} — {item.amount} {item.unit}
+                      </div>
+                      <Button
+                        variant="outline-danger"
+                        size="sm"
+                        onClick={() => deleteItem(list.id, item.id)}
+                      >
+                        ✖
+                      </Button>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+
+                <Row className="mt-3">
+                  <Col>
+                    <Form.Control
+                        type="text"
+                        placeholder="Nazwa produktu"
+                        value={itemInputs[list.id]?.itemName || ""}
+                        onChange={(e) => updateItemInput(list.id, "itemName", e.target.value)}
+                        />
+                        <Form.Control
+                        className="mt-2"
+                        type="number"
+                        placeholder="Ilość"
+                        value={itemInputs[list.id]?.itemAmount || ""}
+                        onChange={(e) => updateItemInput(list.id, "itemAmount", e.target.value)}
+                        />
+                  </Col>
+                  <Col>
+                    <Button variant="success" onClick={() => addItem(list.id)}>
+                        ➕ Dodaj produkt
+                        </Button>
+                  </Col>
+                </Row>
+              </Card.Body>
+            )}
+          </Card>
+        );
+      })}
     </div>
   );
 }
 
-// Modyfikowany komponent do nawigacji:
+// Komponent do nawigacji
 export function ShoppingPlannerCard() {
   const navigate = useNavigate();
   return (
