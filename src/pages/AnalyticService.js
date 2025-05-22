@@ -107,7 +107,7 @@ const AnalyticsPage = () => {
               {history.length === 0 ? (
                 <p className="text-muted">Nie wygenerowano jeszcze wykresów.</p>
               ) : (
-                <div style={{ maxHeight: "50vh", overflowY: "auto" }}>
+                <div style={{ maxHeight: "75vh", overflowY: "auto" }}>
                   <ListGroup>
                     {history.map((item, index) => (
                       <ListGroup.Item
