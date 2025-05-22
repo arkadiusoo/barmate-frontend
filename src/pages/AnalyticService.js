@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Container,
   Row,
@@ -15,26 +15,41 @@ const AnalyticsPage = () => {
   const [generationDate, setGenerationDate] = useState(null);
   const [history, setHistory] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
+  const [chartUrl, setChartUrl] = useState(null);
+
+  // Load history on mount
+  useEffect(() => {
+    fetch("http://localhost:8080/api/charts/history?userId=1")
+      .then((res) => res.json())
+      .then(setHistory)
+      .catch((err) => console.error("Błąd pobierania historii:", err));
+  }, []);
 
   const handleGenerate = () => {
     if (!selectedChart) return;
-    const now = new Date().toLocaleString(undefined, {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    setGenerationDate(now);
-    setHistory((prev) => [...prev, { type: selectedChart, date: now }]);
-    setActiveIndex(history.length);
+
+    fetch(
+      `http://localhost:8080/api/charts/generate?chartType=${selectedChart}&userId=1`
+    )
+      .then((res) => res.blob())
+      .then((blob) => {
+        const imageUrl = URL.createObjectURL(blob);
+        setChartUrl(imageUrl);
+        const now = new Date().toLocaleString();
+        setGenerationDate(now);
+        setActiveIndex(history.length);
+
+        // Odśwież historię po wygenerowaniu
+        return fetch("http://localhost:8080/api/charts/history?userId=1");
+      })
+      .then((res) => res.json())
+      .then(setHistory);
   };
 
   return (
     <MainLayout>
       <Container className="my-4">
         <Row>
-          {/* Main analytic section */}
           <Col lg={8}>
             <Card className="p-4 shadow-sm">
               <h2 className="text-center mb-4">📊 Statystyki</h2>
@@ -46,12 +61,15 @@ const AnalyticsPage = () => {
                   onChange={(e) => setSelectedChart(e.target.value)}
                 >
                   <option value="">-- Wybierz opcję --</option>
-                  <option value="preparedDrinks">
-                    Number of prepared drinks
+                  <option value="ConsuptionInTime">
+                    Liczba przygotowanych drinków
                   </option>
-                  <option value="topRecipes1">Top 1 most popular drinks</option>
-                  <option value="topRecipes2">Top 2 most popular drinks</option>
-                  <option value="topRecipes3">Top 3 most popular drinks</option>
+                  <option value="TheMostPopularRecipies">
+                    Najpopularniejsze drinki
+                  </option>
+                  <option value="TheMostPopularIngredients">
+                    Najczęściej używane składniki
+                  </option>
                 </Form.Select>
               </Form.Group>
 
@@ -70,9 +88,9 @@ const AnalyticsPage = () => {
               )}
 
               <div className="border rounded p-3 bg-light text-center">
-                {selectedChart && generationDate ? (
+                {chartUrl ? (
                   <img
-                    src="/path-to-generated-chart.png"
+                    src={chartUrl}
                     alt="Generated chart"
                     style={{ maxWidth: "100%", borderRadius: "8px" }}
                   />
@@ -83,7 +101,6 @@ const AnalyticsPage = () => {
             </Card>
           </Col>
 
-          {/* History section */}
           <Col lg={4}>
             <Card className="shadow-sm p-3">
               <h5 className="mb-3">📂 Historia</h5>
@@ -94,18 +111,29 @@ const AnalyticsPage = () => {
                   <ListGroup>
                     {history.map((item, index) => (
                       <ListGroup.Item
-                        key={index}
+                        key={item.id}
                         active={activeIndex === index}
                         onClick={() => {
-                          setSelectedChart(item.type);
-                          setGenerationDate(item.date);
+                          setSelectedChart(item.chartType);
                           setActiveIndex(index);
+                          setGenerationDate(
+                            new Date(item.created).toLocaleString()
+                          );
+                          fetch(
+                            `http://localhost:8080/api/charts/regenerate/${item.id}`
+                          )
+                            .then((res) => res.blob())
+                            .then((blob) =>
+                              setChartUrl(URL.createObjectURL(blob))
+                            );
                         }}
                         style={{ cursor: "pointer" }}
                       >
-                        <strong>{item.type}</strong>
+                        <strong>{item.chartType}</strong>
                         <br />
-                        <small className="text-muted">{item.date}</small>
+                        <small className="text-muted">
+                          {new Date(item.created).toLocaleString()}
+                        </small>
                       </ListGroup.Item>
                     ))}
                   </ListGroup>
