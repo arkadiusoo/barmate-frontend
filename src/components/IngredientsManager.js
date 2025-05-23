@@ -15,7 +15,7 @@ function IngredientsManager() {
 
   const fetchIngredients = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/ingredients");
+      const response = await axios.get("http://localhost:8082/ingredients");
       setIngredients(response.data);
     } catch (error) {
       console.error("Error fetching ingredients:", error);
@@ -27,12 +27,12 @@ function IngredientsManager() {
       if (currentIngredient) {
         // Aktualizacja składnika
         await axios.put(
-          `http://localhost:8080/ingredients/${currentIngredient.id}`,
+          `http://localhost:8082/ingredients/${currentIngredient.id}`,
           formData
         );
       } else {
         // Dodanie nowego składnika
-        await axios.post("http://localhost:8080/ingredients", formData);
+        await axios.post("http://localhost:8082/ingredients", formData);
       }
       fetchIngredients();
       setShowModal(false);
@@ -50,7 +50,7 @@ function IngredientsManager() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:8080/ingredients/${id}`);
+      await axios.delete(`http://localhost:8082/ingredients/${id}`);
       fetchIngredients();
     } catch (error) {
       console.error("Error deleting ingredient:", error);
