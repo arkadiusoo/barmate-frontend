@@ -9,6 +9,7 @@ import {
   ListGroup,
 } from "react-bootstrap";
 import MainLayout from "../layouts/MainLayout";
+import { useNavigate } from "react-router-dom";
 
 const AnalyticsPage = () => {
   const [selectedChart, setSelectedChart] = useState("");
@@ -16,6 +17,7 @@ const AnalyticsPage = () => {
   const [history, setHistory] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [chartUrl, setChartUrl] = useState(null);
+  const navigate = useNavigate();
 
   // Load history on mount
   useEffect(() => {
@@ -49,6 +51,13 @@ const AnalyticsPage = () => {
   return (
     <MainLayout>
       <Container className="my-4">
+        <Button
+          variant="secondary"
+          className="mb-3"
+          onClick={() => navigate(-1)}
+        >
+          ⬅ Powrót
+        </Button>
         <Row>
           <Col lg={8}>
             <Card className="p-4 shadow-sm">
