@@ -28,7 +28,7 @@ function Dashboard({ onLogout }) {
                 <Button
                   variant="primary"
                   className="w-100"
-                  onClick={() => navigate("/inventory")}
+                  onClick={() => navigate("/ingredients")} // Zmieniono ścieżkę
                 >
                   Zarządzaj składnikami
                 </Button>
