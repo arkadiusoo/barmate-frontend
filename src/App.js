@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
+import ShoppingListPage from "./pages/ShoppingListPage";
 
 import IngredientsPage from "./pages/IngredientsPage";
 import AnalyticsPage from "./pages/AnalyticService";
@@ -37,7 +38,9 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/ingredients" element={<IngredientsPage />} />
             <Route path="*" element={<Navigate to="/dashboard" />} />
+            <Route path="/shopping-list" element={<ShoppingListPage />} />
             <Route path="/analytics" element={<AnalyticsPage />} />
+
           </>
         )}
       </Routes>
