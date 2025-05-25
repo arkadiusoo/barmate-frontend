@@ -3,11 +3,11 @@ import axios from "axios";
 import { Button, Form, ListGroup, Card, Col, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-const API_URL = "http://localhost:8080/shopping-list";
+const API_URL = "http://localhost:8083/shopping-list";
 
 export default function ShoppingListPage() {
   const [lists, setLists] = useState([]);
-  const [newListName, setNewListName] = useState("");
+  //const [newListName, setNewListName] = useState("");
   const [expandedLists, setExpandedLists] = useState({});
   const [itemInputs, setItemInputs] = useState({});
   const updateItemInput = (listId, field, value) => {
@@ -49,13 +49,13 @@ const fetchLists = async () => {
   }, []);
 
   const createList = async () => {
-    if (!newListName) return;
+    //if (!newListName) return;
     await axios.post(API_URL, 1, {
       headers: {
         "Content-Type": "application/json",
       },
     });
-    setNewListName("");
+    //setNewListName("");
     fetchLists();
   };
 
@@ -123,12 +123,13 @@ const fetchLists = async () => {
       <h2>🛒 Lista zakupów</h2>
       <Row className="mb-4">
         <Col md={6}>
+        {/*
           <Form.Control
             type="text"
             placeholder="Nazwa nowej listy"
             value={newListName}
             onChange={(e) => setNewListName(e.target.value)}
-          />
+          />*/}
         </Col>
         <Col md={3}>
           <Button onClick={createList}>➕ Dodaj listę</Button>
