@@ -56,10 +56,11 @@ function Dashboard({ onLogout }) {
           <Col md={6} lg={4}>
             <Card className="mb-3 shadow-sm h-100">
               <Card.Body>
-                <Card.Title>📊 Analiza Użycia</Card.Title>
+                <Card.Title>📊 Statystyki</Card.Title>
                 <Card.Text>
-                  Sprawdzaj, które składniki są najczęściej używane i które
-                  drinki robisz najczęściej.
+                  Widok podsumowania składników i przepisów. Sprawdzaj, które
+                  składniki są najczęściej używane i które drinki robisz
+                  najczęściej.
                 </Card.Text>
                 <Button
                   variant="info"
@@ -74,16 +75,6 @@ function Dashboard({ onLogout }) {
         </Row>
 
         <Row className="mt-5">
-          <Col md={6}>
-            <Card className="shadow-sm">
-              <Card.Body>
-                <Card.Title>🗺️ Widok BarMate</Card.Title>
-                <Card.Text>
-                  Widok podsumowania składników i przepisów – wkrótce!
-                </Card.Text>
-              </Card.Body>
-            </Card>
-          </Col>
           <Col md={6}>
             <Card className="shadow-sm">
               <Card.Body>
