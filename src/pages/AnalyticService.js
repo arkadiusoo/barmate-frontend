@@ -21,7 +21,7 @@ const AnalyticsPage = () => {
 
   // Load history on mount
   useEffect(() => {
-    fetch("http://localhost:8080/api/charts/history?userId=1")
+    fetch("http://localhost:8081/api/charts/history?userId=1")
       .then((res) => res.json())
       .then(setHistory)
       .catch((err) => console.error("Błąd pobierania historii:", err));
@@ -31,7 +31,7 @@ const AnalyticsPage = () => {
     if (!selectedChart) return;
 
     fetch(
-      `http://localhost:8080/api/charts/generate?chartType=${selectedChart}&userId=1`
+      `http://localhost:8081/api/charts/generate?chartType=${selectedChart}&userId=1`
     )
       .then((res) => res.blob())
       .then((blob) => {
@@ -42,7 +42,7 @@ const AnalyticsPage = () => {
         setActiveIndex(history.length);
 
         // Odśwież historię po wygenerowaniu
-        return fetch("http://localhost:8080/api/charts/history?userId=1");
+        return fetch("http://localhost:8081/api/charts/history?userId=1");
       })
       .then((res) => res.json())
       .then(setHistory);
@@ -129,7 +129,7 @@ const AnalyticsPage = () => {
                             new Date(item.created).toLocaleString()
                           );
                           fetch(
-                            `http://localhost:8080/api/charts/regenerate/${item.id}`
+                            `http://localhost:8081/api/charts/regenerate/${item.id}`
                           )
                             .then((res) => res.blob())
                             .then((blob) =>
