@@ -2,15 +2,16 @@ import React, { useRef, useLayoutEffect, useState, useContext } from "react";
 import { Form, Button } from "react-bootstrap";
 import { CSSTransition, SwitchTransition } from "react-transition-group";
 import { ThemeContext } from "../styles/ThemeContext";
-import { useNavigate } from "react-router-dom";
 import "../styles/authTransition.css";
+import { authService } from "../pages/AuthService";
 
 function AuthForm({ isLogin, onSwitchMode }) {
   const { darkMode } = useContext(ThemeContext);
   const nodeRef = useRef(null);
   const containerRef = useRef(null);
-  const navigate = useNavigate();
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   useLayoutEffect(() => {
     if (nodeRef.current && containerRef.current) {
@@ -33,13 +34,20 @@ function AuthForm({ isLogin, onSwitchMode }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (isLogin) {
-      navigate("/");
-    } else {
-      console.log("Register flow not implemented");
+    try {
+      if (isLogin) {
+        await authService.login(username, password);
+      } else {
+        await authService.register(username, password, email);
+        await authService.login(username, password);
+      }
+      localStorage.setItem("userName", username);
+      localStorage.setItem("isLoggedIn", "true");
+      window.location.href = "/dashboard";
+    } catch (error) {
+      alert(error.message);
     }
   };
 
@@ -67,40 +75,43 @@ function AuthForm({ isLogin, onSwitchMode }) {
             }`}
           >
             <Form onSubmit={handleSubmit}>
-              {!isLogin && (
-                <Form.Group className="mb-3">
-                  <Form.Label>Imię</Form.Label>
-                  <Form.Control type="text" placeholder="Wpisz swoje imię" />
-                </Form.Group>
-              )}
               <Form.Group className="mb-3">
-                <Form.Label>Email</Form.Label>
+                <Form.Label>Nazwa użytkownika</Form.Label>
                 <Form.Control
-                  type="email"
-                  placeholder="Wpisz email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  type="text"
+                  placeholder="np. user1"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                 />
               </Form.Group>
+
+              {!isLogin && (
+                <Form.Group className="mb-3">
+                  <Form.Label>Email</Form.Label>
+                  <Form.Control
+                    type="email"
+                    placeholder="Wpisz email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </Form.Group>
+              )}
+
               <Form.Group className="mb-3">
                 <Form.Label>Hasło</Form.Label>
-                <Form.Control type="password" placeholder="Hasło" />
+                <Form.Control
+                  id="passwordField"
+                  type="password"
+                  placeholder="Hasło"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </Form.Group>
-              <Button
-                type="submit"
-                variant="primary"
-                className="w-100 mb-2"
-                onClick={(e) => {
-                  e.preventDefault();
-                  const finalEmail =
-                    email.trim() !== "" ? email : "Adam@gmail.com";
-                  localStorage.setItem("userEmail", finalEmail);
-                  localStorage.setItem("isLoggedIn", "true");
-                  window.location.href = "/dashboard";
-                }}
-              >
+
+              <Button type="submit" variant="primary" className="w-100 mb-2">
                 {isLogin ? "Zaloguj" : "Zarejestruj"}
               </Button>
+
               <div className="text-center">
                 <small>
                   {isLogin ? "Nie masz konta jeszcze?" : "Masz już konto?"}{" "}

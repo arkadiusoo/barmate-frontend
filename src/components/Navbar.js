@@ -25,9 +25,14 @@ function NavigationBar({ onLoginClick }) {
         <Navbar.Toggle />
         <Navbar.Collapse>
           <Nav className="ms-auto d-flex align-items-center gap-2">
-            <Nav.Link href="#" className="text-light">
+            <Nav.Link href="/dashboard" className="text-light">
               Start
             </Nav.Link>
+            {isLoggedIn && (
+  <Nav.Link href="/profile" className="text-light">
+    Mój profil
+  </Nav.Link>
+)}
             <Nav.Link href="#" className="text-light">
               O nas
             </Nav.Link>

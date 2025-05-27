@@ -1,5 +1,6 @@
+import { authService } from "../pages/AuthService";
+
 export function handleLogout() {
-  localStorage.removeItem("isLoggedIn");
-  localStorage.removeItem("userEmail");
+  authService.logout();
   window.location.href = "/";
 }

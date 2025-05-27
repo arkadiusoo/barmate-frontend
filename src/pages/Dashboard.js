@@ -6,10 +6,9 @@ import { handleLogout } from "../utils/logout";
 
 function Dashboard({ onLogout }) {
   const navigate = useNavigate();
-  const email = localStorage.getItem("userEmail") || "Adam@gmail.com";
-  const nameFromEmail = email.split("@")[0];
+  const username = localStorage.getItem("userName") || "Anonimowy";
   const capitalizedName =
-    nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1);
+    username.charAt(0).toUpperCase() +  username.slice(1);
 
   return (
     <MainLayout>

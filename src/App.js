@@ -8,6 +8,7 @@ import {
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import AnalyticsPage from "./pages/AnalyticService";
+import ProfilePage from "./pages/ProfilePage";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,6 +35,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="*" element={<Navigate to="/dashboard" />} />
             <Route path="/analytics" element={<AnalyticsPage />} />
+            <Route path="/profile" element={<ProfilePage/>} />
           </>
         )}
       </Routes>
