@@ -21,6 +21,17 @@ export default function ShoppingListPage() {
     }));
   };
 
+      const toggleCheckItem = async (listId, itemId, isChecked) => {
+      try {
+        if (!isChecked) {
+          await axios.put(`${API_URL}/${listId}/item/${itemId}`);
+          fetchLists();
+        }
+      } catch (error) {
+        console.error("Nie udało się zaktualizować stanu produktu", error);
+      }
+    };
+
   const fetchLists = async () => {
     const userId = 1;
     try {
@@ -79,7 +90,7 @@ export default function ShoppingListPage() {
     const shoppingItem = {
       ingredientName: input.itemName,
       amount: input.itemAmount,
-      unit: "szt.",
+      unit: input.itemUnit || "szt.",
       checked: false,
       //userId: 1,
       shoppingListId: currentList.id,
@@ -172,8 +183,23 @@ export default function ShoppingListPage() {
                         key={item.id}
                         className="d-flex justify-content-between align-items-center"
                       >
-                        <div>
-                          {item.ingredientName} — {item.amount} {item.unit}
+                        <div className="d-flex align-items-center">
+                          <Form.Check
+                            type="checkbox"
+                            className="me-2"
+                            checked={item.checked}
+                            onChange={() =>
+                              toggleCheckItem(list.id, item.id, item.checked)
+                            }
+                          />
+                          <span
+                            style={{
+                              textDecoration: item.checked ? "line-through" : "none",
+                              color: item.checked ? "black" : "inherit",
+                            }}
+                          >
+                            {item.ingredientName} — {item.amount} {item.unit}
+                          </span>
                         </div>
                         <Button
                           variant="outline-danger"
@@ -205,6 +231,19 @@ export default function ShoppingListPage() {
                           updateItemInput(list.id, "itemAmount", e.target.value)
                         }
                       />
+                      <Form.Select
+                        className="mt-2"
+                        value={itemInputs[list.id]?.itemUnit || "szt."}
+                        onChange={(e) =>
+                          updateItemInput(list.id, "itemUnit", e.target.value)
+                        }
+                      >
+                        <option value="ml">ml</option>
+                        <option value="l">l</option>
+                        <option value="g">g</option>
+                        <option value="kg">kg</option>
+                        <option value="szt.">szt.</option>
+                      </Form.Select>
                     </Col>
                     <Col>
                       <Button
